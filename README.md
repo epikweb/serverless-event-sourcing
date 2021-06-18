@@ -205,6 +205,7 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 - Martin Fowler - [Monolith First](https://martinfowler.com/bliki/MonolithFirst.html)
 - Martin Fowler - [CQRS](https://martinfowler.com/bliki/CQRS.html)
 - Martin Fowler - [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
+- Martin Fowler - [Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html)
 - Khalil Stemmler - [DDD Forum](https://github.com/stemmlerjs/ddd-forum)
 - Matt Ho - [Serverless Event Sourcing with Go](https://www.youtube.com/watch?v=B-reKkB8L5Q)
 - Kamil Grzybek - [Modular Monolith with DDD](https://github.com/kgrzybek/modular-monolith-with-ddd)
