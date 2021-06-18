@@ -1,4 +1,7 @@
 # Serverless Event Sourcing
+My adventure into the world of serverless immutable infrastructure & event sourcing to solve common distributed system problems.
+
+Work in progress!
 
 
 # Abstract
