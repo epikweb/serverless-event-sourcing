@@ -41,11 +41,11 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 ## Attempt #1 - Monolith
 
-What we think happened:
+### What we think happened:
 
 ![](https://i.gyazo.com/a1fca91d8290e3ed53149878ddf57d2b.png)
 
-What really happened:
+### What a domain expert thinks happened:
 
 
 
