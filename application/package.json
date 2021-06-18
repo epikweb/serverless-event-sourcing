@@ -2,7 +2,7 @@
   "name": "application",
   "version": "0.1.0",
   "scripts": {
-    "test": "mocha {eventStore,workflows}/**/*.spec.js"
+    "test": "mocha {event-store,workflows}/**/*.spec.js"
   },
   "devDependencies": {
     "chai": "^4.3.4",
