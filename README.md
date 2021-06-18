@@ -140,7 +140,7 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 - Allows simpler refactoring of wrong aggregate boundaries with a live production system by copying online events to a new data store and replaying them into new projections
 - Prevents the need to make events forwards compatible with blue-green deployments
 - Greg Young says we should replay/cutover every deployment to prove its possible, although we can make it optional in this setup
-
+- The ultimate smoke test: your green application state matches blue after replaying all historical events
 
 ## Scalability
 - DDD aggregates and partitioning allow for pay as you go scalability, without worrying about things such as CPU/memory usage
