@@ -26,5 +26,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: cd application/event-store && yarn
-    - run: cd application/event-store && docker-compose up
+    - run: cd application/event-store && docker-compose up -d
     - run: cd application/event-store && yarn test
