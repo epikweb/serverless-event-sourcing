@@ -39,22 +39,34 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 # Decomposition
 
-## Attempt #1 - Monolith
+## Attempt #1 - Anemic Domain Model
 
 ### What we think happened:
 
 ![](https://i.gyazo.com/a1fca91d8290e3ed53149878ddf57d2b.png)
 
+- Database centric thinking
+- CRUD centric thinking
+
+
 ### What a domain expert thinks happened:
+
+- Behaviour/fact based
+- Workflow/time based
 
 
 
 ## Attempt #2 - DDD Aggregate
 
+- Business logic coupling
+- Use case only calls a small portion of the overall aggregates behaviour
+- Only a small percentage of the entire aggregates' preconditions are checked for the use case
 
 
-## Attempt #3 - Decompose preconditions by business use case
+## Attempt #3 - Decompose by slice
 
+- Loose coupling
+- More code
 
 
 ## Storage normalization downsides
