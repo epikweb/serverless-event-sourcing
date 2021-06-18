@@ -49,7 +49,7 @@ The goal of this project is to setup serverless AWS infrastructure in an immutab
 
 ## Tombstoning/Archiving
 - Allows for shorter streams of traditionally long-lived aggregate by using a special event to carry-forward state into a new stream.
-- Allows for a small OLTP data footprint since events before the reconcilaition checkpoint can be archived. This speeds up read model replay time considerably.
+- Allows for a small OLTP data footprint since events before the reconciliation checkpoint can be archived. This speeds up read model replay time considerably.
 
 ### Examples
 - Opening balance when your bank carries forward your credit card balance

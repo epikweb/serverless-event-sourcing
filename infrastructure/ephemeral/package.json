@@ -1,9 +1,8 @@
 {
-  "name": "infrastructure",
+  "name": "infrastructure-ephemeral",
   "version": "0.1.0",
   "scripts": {
-    "cdk": "cdk",
-    "test": "mocha src/**/*.spec.js"
+    "cdk": "cdk"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.109.0",
