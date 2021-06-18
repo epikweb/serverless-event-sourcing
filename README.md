@@ -181,7 +181,8 @@ One lambda per workflow step/read model.
 - Stores read models that cannot be fit within a single document and require a balanced search tree or full text search for indexing
 
 
-# Inspiration
+# References
 - Greg Young - [Versioning in an Event Sourced System](https://leanpub.com/esversioning/read)
 - Adam Dymitruk - [Event Modeling](https://eventmodeling.org/)
+- Michiel Overeem - [The Dark Side of Event Sourcing](https://www.movereem.nl/files/2017SANER-eventsourcing.pdf)
 - Matt Ho - [Serverless Event Sourcing with Go](https://www.youtube.com/watch?v=B-reKkB8L5Q)
