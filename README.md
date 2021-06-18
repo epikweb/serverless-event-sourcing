@@ -147,23 +147,27 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 
 
 ## Event Store - DynamoDB
+- Allows for an in-order replay guarantee on a per-stream basis.
+- Allows for write scalability due to sharding based on a UUID key with high cardinality (`aggregateId`).
+- Has transactional guarantees necessary to prevent concurrent writers writing to the same `expectedVersion`
+- Has built-in streaming to Kinesis with the flip of a switch
 
 ### Primary key schema
-- This allows for an in-order replay guarantee on a per-stream basis.
-- Allows for write scalability due to sharding based on a UUID key with high cardinality (`streamId`).
 
 | Hash Key        | Range Key
 | ------------- |:-------------:|
-| `aggregateId`      | `sequenceNumber`
+| `aggregateId`      | `version`
 
 ## Http Rest API - API Gateway
+- Mutable big flip switch for blue green deployments
+
 ## Websockets - API Gateway
+- Mutable big flip switch for blue green deployments
 
 ## Command Handlers - Lambda
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
 
-One lambda per workflow step.
-
+- One lambda per command
 
 
 ## Event Bus - Kinesis
@@ -171,13 +175,14 @@ One lambda per workflow step.
 ![](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2020/09/28/kinesis1-1024x309.png)
 ![](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2020/09/28/kinesis2-1024x370.png)
 
-- Kinesis has ordering guarantees per dynamodb partition, this allowed in-order replay of aggregates even with competing consumers
+- Kinesis has ordering guarantees per dynamodb partition
+- This allowed in-order replay of aggregates even with competing consumers
 
 
 ## Projectors - Lambda
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
 
-One lambda per read model.
+- One lambda per read model with competing consumers
 
 
 ## Read Model Store #1 - DynamoDB
@@ -207,6 +212,7 @@ One lambda per read model.
 - Allard Buijze - [Event-Driven Microservices](https://www.youtube.com/watch?v=jrbWIS7BH70)
 - Frans van Buul - [The Big Friendly Monolith](https://www.youtube.com/watch?v=NgVk74f5Jes)
 - Nakul Mishra - [CQRS and EventSourcing with Spring & Axon](https://www.youtube.com/watch?v=hkJ29ER1EZU)
+- Kai Sassnowski - [Database Indexing](https://www.youtube.com/watch?v=HubezKbFL7E)
 - Eric Evans - [Domain Driven Design](https://www.amazon.ca/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=pd_lpo_1?pd_rd_i=0321125215&psc=1)
 - Michiel Overeem - [The Dark Side of Event Sourcing](https://www.movereem.nl/files/2017SANER-eventsourcing.pdf)
 - Joris Kuipers - [Day 2 problems in CQRS and Event Sourcing](https://www.youtube.com/watch?v=73KxyTUU4nU)
