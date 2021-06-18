@@ -174,7 +174,7 @@ One lambda per workflow step.
 - Kinesis has ordering guarantees per dynamodb partition, this allowed in-order replay of aggregates even with competing consumers
 
 
-## Query Handlers - Lambda
+## Projectors - Lambda
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
 
 One lambda per read model.
