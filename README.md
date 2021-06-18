@@ -42,7 +42,7 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 # Decomposition
 
-## Attempt #1 - Anemic Domain Model
+## Attempt #1 - Transaction Script
 
 ### What we think happened:
 
@@ -58,18 +58,37 @@ This results in a middleware stack that is highly complex, and requires extensiv
 - Workflow/time based
 
 
+### Pros
+- Quick to write
+
+### Cons
+- Mismatch between business domain and code
+- Business logic cannot be unit tested in isolation
+
 
 ## Attempt #2 - DDD Aggregate
 
 - Business logic coupling
 - Use case only calls a small portion of the overall aggregates behaviour
-- Only a small percentage of the entire aggregates' preconditions are checked for the use case
+- Only a small percentage of the entire aggregates' preconditions are checked for the command
+
+### Pros
+- Business logic can be unit tested in isolation
+
+### Cons
+- Business logic coupling since the aggregates behaviour is the common denominator of all commands it handles
 
 
-## Attempt #3 - Decompose by slice
+## Solution - Functional core per request with Event Sourcing
 
+### Pros
 - Loose coupling
 - More code
+- Aligned with the business
+
+
+### Cons
+- Time
 
 
 ## Storage normalization downsides
@@ -77,12 +96,10 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 - Query complexity
 - Slow OLAP queries
-
-Add another 20 joins, a few group bys and we end up in a situation where data access to answer queries has more complexity than the business logic and requires integration tests to cover each branch of complexity.
-As Greg Young talks about, this complexity is largely accidental, and comes from trying to fit a model that is event-based into a relational schema.
-
-Wouldn't it be nice to selectively apply the **Event Sourcing** pattern with CQRS to be able to have more control over where this complexity resides for the complex core subdomains in our system?
-
+- Performance
+- Combinatorial explosion of code paths in the database that requires integration tests
+- Query logic can become more complex than the command logic
+- Accidental complexity, can be solved with CQRS
 
 
 # Solution
@@ -183,13 +200,14 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
 
 - One lambda per command
-
+- Writes to event store
 
 ## Event Bus - Kinesis
 
 ![](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2020/09/28/kinesis1-1024x309.png)
 ![](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2020/09/28/kinesis2-1024x370.png)
 
+- DynamoDB has native replication to Kinesis
 - Kinesis has ordering guarantees per dynamodb partition
 - This allowed in-order replay of aggregates even with competing consumers
 
@@ -198,6 +216,7 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
 
 - One lambda per read model with competing consumers
+- Events received from Kinesis
 
 
 ## Read Model Store #1 - DynamoDB
@@ -230,6 +249,7 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 - Martin Fowler - [Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html)
 - Khalil Stemmler - [DDD Forum](https://github.com/stemmlerjs/ddd-forum)
 - Matt Ho - [Serverless Event Sourcing with Go](https://www.youtube.com/watch?v=B-reKkB8L5Q)
+- Pat Helland - [Life beyond Distributed Transactions](http://cs.brown.edu/courses/cs227/archives/2012/papers/weaker/cidr07p15.pdf)
 - Kamil Grzybek - [Modular Monolith with DDD](https://github.com/kgrzybek/modular-monolith-with-ddd)
 - Gary Bernhardt - [Functional Core, Imperative Shell](https://www.youtube.com/watch?v=yTkzNHF6rMs)
 - Allard Buijze - [Event-Driven Microservices](https://www.youtube.com/watch?v=jrbWIS7BH70)
