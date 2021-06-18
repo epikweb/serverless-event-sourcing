@@ -159,10 +159,10 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 ## Http Rest API - API Gateway
 ## Websockets - API Gateway
 
-## Application Services - Lambda
+## Command Handlers - Lambda
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
 
-One lambda per workflow step/read model.
+One lambda per workflow step.
 
 
 
@@ -173,6 +173,11 @@ One lambda per workflow step/read model.
 
 - Kinesis has ordering guarantees per dynamodb partition, this allowed in-order replay of aggregates even with competing consumers
 
+
+## Query Handlers - Lambda
+![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
+
+One lambda per read model.
 
 
 ## Read Model Store #1 - DynamoDB
