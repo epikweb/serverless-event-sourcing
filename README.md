@@ -114,11 +114,25 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 - Closing the books at the end of an accounting year-end and bringing forward the closing balances of the general ledger
 
 
+### Upfront design
+- Event Sourcing requires upfront design with domain experts to discover the stream boundaries.
+- By applying the event modeling approach, boundaries can be found early to prevent versioning issues
+- Blue-green deployments used as an escape hatch to refactor boundaries as the domain knowledge develops
+
+
+
+### Query Federation
+- Archived data is now hard to query
+- We need a way to replay an aggregates state across archived + online data
+- S3 for aggregate archiving, athena to query?
+
+
 # The Infrastructure: Serverless & Ephemeral
 
 ## Ephemeral
 - Allows simpler refactoring of wrong aggregate boundaries with a live production system by copying online events to a new data store and replaying them into new projections
 - Prevents the need to make events forwards compatible with blue-green deployments
+- Greg Young says we should replay/cutover every deployment to prove its possible, although we can make it optional in this setup
 
 
 ## Scalability
