@@ -1,4 +1,3 @@
-const {eventTableName} = require("../config");
 const {deepFreeze} = require("../auxiliary");
 const {pipe} = require("../auxiliary");
 const unmarshalStream = ({ Items }) => {
@@ -19,8 +18,8 @@ const unmarshalStream = ({ Items }) => {
 }
 const unmarshalEvent = event => ({ aggregateId: event.aggregateId, type: event.type, payload: JSON.parse(event.payload), timestamp: event.timestamp, version: event.version })
 
-const marshalRead = aggregateId => ({
-  TableName: eventTableName,
+const marshalRead = (aggregateId, tableName) => ({
+  TableName: tableName,
   ConsistentRead: true,
   KeyConditionExpression: 'aggregateId = :aggregateId',
   ExpressionAttributeValues: {

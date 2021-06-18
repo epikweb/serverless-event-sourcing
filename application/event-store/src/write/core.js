@@ -1,6 +1,6 @@
 const {pipe} = require("../auxiliary");
-const {eventTableName} = require("../config");
 const { assert } = require('chai')
+
 const checkPreconditions = ({ aggregateId, expectedVersion, events, snapshot }) => {
   assert.typeOf(aggregateId, 'string')
   assert.typeOf( expectedVersion, 'number')
@@ -36,7 +36,7 @@ const sequenceEvents = ({ events, snapshot, expectedVersion, attemptsMade }) =>
     })
   )
 
-const marshalWrite = ({ aggregateId, events, snapshot, expectedVersion, attemptsMade }) => pipe(
+const marshalWrite = ({ aggregateId, events, snapshot, expectedVersion, attemptsMade, tableName }) => pipe(
   () => aggregateId.split('-')[0],
   aggregateName => ({ aggregateName, events: sequenceEvents({ events, expectedVersion, attemptsMade, snapshot })}),
   ({ aggregateName, events }) => ({
@@ -44,7 +44,7 @@ const marshalWrite = ({ aggregateId, events, snapshot, expectedVersion, attempts
       event => (
         {
           Put: {
-            TableName: eventTableName,
+            TableName: tableName,
             Item: {
               aggregateId,
               aggregateName,

@@ -25,6 +25,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd application/event-store && yarn
-    - run: cd application/event-store && docker-compose up -d
-    - run: cd application/event-store && yarn test
+    - run: cd application && yarn
+    - run: cd application && docker-compose up -d
+    - run: cd application && yarn test
