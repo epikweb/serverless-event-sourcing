@@ -176,7 +176,7 @@ One lambda per workflow step/read model.
 
 
 ## Read Model Store #1 - DynamoDB
-- Stores read models that can be fit within a single document
+- Stores read models that can be fit within a single document (under 400kb)
 
 
 ## Read Model Store #2 - ElasticSearch
