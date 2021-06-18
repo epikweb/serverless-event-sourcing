@@ -53,7 +53,7 @@ What really happened:
 
 
 
-## Attempt #3 - Decompose preconditions by workflow step
+## Attempt #3 - Decompose preconditions by business use case
 
 
 
