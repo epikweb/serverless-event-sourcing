@@ -156,6 +156,8 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 | ------------- |:-------------:|
 | `aggregateId`      | `sequenceNumber`
 
+## Http Rest API - API Gateway
+## Websockets - API Gateway
 
 ## Application Services - Lambda
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)
