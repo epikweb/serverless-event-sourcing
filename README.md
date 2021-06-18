@@ -92,10 +92,8 @@ Event modeling allows for a simple visualization how each component of the syste
 
 - Versioning of long-lived aggregates
 - Versioning of event schemas
-- Refactoring stream boundaries is difficult to correct once a system is in production
+- Refactoring aggregate boundaries is difficult to correct once a system is in production
 - Tight coupling of snapshots to the underlying left-fold that created the state
-- Tight coupling of read models to the event store/schema
-- Blue-green deployments
 - Read model replay ordering guarantees
 - Read model replay time with a large number of events
 
@@ -104,10 +102,20 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 
 ## Solving the tradeoffs
 
+### Refactoring - Upcasting
+- Add default values to older events as new information is available (akin to add column with default value in a relational database)
+
+
+### Refactoring Deluxe - Copy Transform with Blue Green Deployment
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--HW_8_gYS--/c_imagga_scale,f_auto,fl_progressive,h_500,q_auto,w_1000/https://thepracticaldev.s3.amazonaws.com/i/m664yyotixnqncprryf0.png)
+
+- Allows for complete refactoring of historical events (copy-replace)
+- Need to ensure external subscribers such as emailers do not resend emails
+
 
 ### Tombstoning/Archiving
 - Allows for shorter streams of traditionally long-lived aggregate by using a special event to carry-forward state into a new stream.
-- Allows for a small OLTP data footprint since events before the reconciliation checkpoint can be archived. This speeds up read model replay time considerably.
+- Allows for a small OLTP data footprint since events before the reconciliation checkpoint can be archived. This speeds up replay time considerably.
 
 #### Examples
 - Opening balance when your bank carries forward your credit card balance
@@ -116,13 +124,12 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 
 ### Upfront design
 - Event Sourcing requires upfront design with domain experts to discover the stream boundaries.
-- By applying the event modeling approach, boundaries can be found early to prevent versioning issues
-- Blue-green deployments used as an escape hatch to refactor boundaries as the domain knowledge develops
-
+- By applying the event modeling approach, boundaries can be found early to prevent having versioning issues/needing to refactor
+- Copy transform with blue-green deployments is used as an escape hatch to refactor incorrect boundaries
 
 
 ### Query Federation
-- Archived data is now hard to query
+- Archived aggregate data is now hard to query
 - We need a way to replay an aggregates state across archived + online data
 - S3 for aggregate archiving, athena to query?
 
