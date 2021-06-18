@@ -1,0 +1,1 @@
+module.exports.eventTableName = 'event-sourcing-events26E65764-GMFLUECOJDR0'
