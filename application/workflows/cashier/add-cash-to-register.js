@@ -1,5 +1,5 @@
-const {write} = require("../../eventStore/write/shell");
-const {read} = require("../../eventStore/read/shell");
+const {write} = require("../../event-store/write/shell");
+const {read} = require("../../event-store/read/shell");
 
 const buildReducer = (initialState, handlers) => events => events.reduce((state, event) => {
   if (handlers[event.type]) {
