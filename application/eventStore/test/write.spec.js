@@ -1,4 +1,4 @@
-const {arrangeEventStore} = require("../../test/harness");
+const {arrangeEventStore} = require("./harness");
 const {assert} = require('chai')
 
 describe('write integration tests', () => {
@@ -25,7 +25,7 @@ describe('write integration tests', () => {
           }
         )
     )
-  )
+  ).timeout(15000)
   it('should protect concurrent access to a single stream by retrying 10 times over ~2 sec', () =>
     arrangeEventStore().then(
       eventStore =>

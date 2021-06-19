@@ -1,4 +1,4 @@
-const {arrangeEventStore} = require("../../test/harness");
+const {arrangeEventStore} = require("./harness");
 const {assert} = require('chai')
 
 describe('read integration tests', () => {
@@ -15,5 +15,5 @@ describe('read integration tests', () => {
               })
             )
       )
-  )
+  ).timeout(15000)
 })

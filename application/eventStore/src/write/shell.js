@@ -1,6 +1,7 @@
 const {handleError} = require("./core");
 const {marshalWrite} = require("./core");
 const {checkPreconditions} = require("./core");
+const {sleep} = require('../auxiliary')
 module.exports = ({ client, tableName }) => ({ aggregateId, events, expectedVersion, snapshot=null }) => {
   checkPreconditions({ aggregateId, events, expectedVersion, snapshot })
 
@@ -16,7 +17,7 @@ module.exports = ({ client, tableName }) => ({ aggregateId, events, expectedVers
           const { instruction, data } = handleError({ err, attemptsMade })
 
           if (instruction === 'sleepThenRetry') {
-            await new Promise(resolve => setTimeout(resolve, data.backoffDelay))
+            await sleep(data.backoffDelay)
             return run(attemptsMade + 1)
           }
 
