@@ -44,6 +44,8 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 ## Attempt #1 - Transaction Script
 
+Works when the underlying operation is truly CRUD.
+
 ### What we think happened:
 
 ![](https://i.gyazo.com/a1fca91d8290e3ed53149878ddf57d2b.png)
@@ -59,7 +61,7 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 
 ### Pros
-- Quick to write
+- Implementation time
 
 ### Cons
 - Mismatch between business domain and code
@@ -88,7 +90,7 @@ This results in a middleware stack that is highly complex, and requires extensiv
 
 
 ### Cons
-- Time
+- Implementation time
 
 
 ## Storage normalization downsides
@@ -260,3 +262,4 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 - Eric Evans - [Domain Driven Design](https://www.amazon.ca/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=pd_lpo_1?pd_rd_i=0321125215&psc=1)
 - Michiel Overeem - [The Dark Side of Event Sourcing](https://www.movereem.nl/files/2017SANER-eventsourcing.pdf)
 - Joris Kuipers - [Day 2 problems in CQRS and Event Sourcing](https://www.youtube.com/watch?v=73KxyTUU4nU)
+- Yan Cui [Lambda and DynamoDB Event Sourcing](https://theburningmonk.com/2019/08/a-simple-event-sourcing-example-with-snapshots-using-lambda-and-dynamodb/)
