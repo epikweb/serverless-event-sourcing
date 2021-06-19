@@ -1,4 +1,4 @@
-const {EventStore} = require("../../eventStore/src");
+const {EventStore} = require("../eventStore/src");
 const AWS = require('aws-sdk')
 const client = new AWS.DynamoDB.DocumentClient()
 

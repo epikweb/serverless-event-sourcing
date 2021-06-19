@@ -193,10 +193,13 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 | `aggregateId`      | `version`
 
 ## Http Rest API - API Gateway
-- Mutable big flip switch for blue green deployments
+
 
 ## Websockets - API Gateway
-- Mutable big flip switch for blue green deployments
+
+
+## DNS Cutover - CloudFlare Workers/Load Balancing
+Weighted canary release to new API gateway (see: [here](https://developers.cloudflare.com/load-balancing/understand-basics/weighted-load-balancing))
 
 ## Command Handlers - Lambda
 ![](https://theburningmonk.com/wp-content/uploads/2019/08/img_5d5fe26a0551d.png)

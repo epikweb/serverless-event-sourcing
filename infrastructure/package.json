@@ -2,7 +2,8 @@
   "name": "infrastructure-ephemeral",
   "version": "0.1.0",
   "scripts": {
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "test": "yarn test"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.109.0",
@@ -20,6 +21,7 @@
     "@aws-cdk/aws-s3": "^1.109.0",
     "@aws-cdk/aws-sqs": "^1.109.0",
     "@aws-cdk/core": "1.109.0",
-    "aws-sdk": "^2.931.0"
+    "aws-sdk": "^2.931.0",
+    "axios": "^0.21.1"
   }
 }
