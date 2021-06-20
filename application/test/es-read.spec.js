@@ -1,9 +1,11 @@
-const {arrangeEventStore} = require("./harness");
+const {EventStore} = require('../src/_eventStore')
+const {arrangeEventTable} = require("./_harness");
 const {assert} = require('chai')
 
 describe('read integration tests', () => {
   it('should return no events and sequence number read as zero if the aggregate does not yet exist', () =>
-    arrangeEventStore()
+    arrangeEventTable()
+      .then(EventStore)
       .then(
         eventStore =>
           eventStore

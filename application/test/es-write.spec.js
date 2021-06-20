@@ -1,9 +1,12 @@
-const {arrangeEventStore} = require("./harness");
+const {arrangeEventTable} = require("./_harness");
+const {EventStore} = require("../src/_eventStore");
 const {assert} = require('chai')
 
 describe('write integration tests', () => {
   it('should write 3 events to an aggregate + snapshot it', () =>
-    arrangeEventStore().then(
+    arrangeEventTable()
+      .then(EventStore)
+      .then(
       eventStore =>
         eventStore.write({
           aggregateId: 'wallet-123',
@@ -27,7 +30,9 @@ describe('write integration tests', () => {
     )
   ).timeout(15000)
   it('should protect concurrent access to a single stream by retrying 10 times over ~2 sec', () =>
-    arrangeEventStore().then(
+    arrangeEventTable()
+      .then(EventStore)
+      .then(
       eventStore =>
         Promise.all(
           [...new Array(5)].map(

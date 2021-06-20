@@ -33,10 +33,11 @@ To run a typical distributed web application, a typical devops stack will likely
 - Change data capture
 - ETL data pipelines
 - Linux shell scripts
+- Connecting pool tweaking
 
 
-This results in a middleware stack that is highly complex, and requires extensive documentation for a newly onboarded developers to understand. 
-
+This results in a middleware stack that is highly complex, requires extensive documentation for a newly onboarded developers to understand, and adds no business value (feature wise).
+What if we can outsource all this to Amazon and focus on adding features?
 
 
 
@@ -232,13 +233,14 @@ Weighted canary release to new API gateway (see: [here](https://developers.cloud
 - Stores read models that cannot be fit within a single document and require a balanced search tree or full text search for indexing
 
 
-# References
+# Resources
 - Greg Young - [Versioning in an Event Sourced System](https://leanpub.com/esversioning/read)
 - Greg Young - [A Decade of DDD, CQRS, Event Sourcing](https://www.youtube.com/watch?v=LDW0QWie21s)
 - Adam Dymitruk - [Event Modeling Organization](https://eventmodeling.org/)
 - Adam Dymitruk - [Event Modeling Talk](https://www.youtube.com/watch?v=UYJ83me8O58)
 - Vaughn Vernon - [oDDs and enDDs](https://www.youtube.com/watch?v=4UZZjyQDgT8)
 - Vaughn Vernon - [Rethinking Legacy and Monolithic Systems](https://www.youtube.com/watch?v=OSARwCnSRCI)
+- Vaughn Vernon - [Implementing Domain Driven Design](https://www.amazon.ca/Implementing-Domain-Driven-Design-Vaughn-Vernon-ebook/dp/B00BCLEBN8/ref=sr_1_1?dchild=1&keywords=vaughn+vernon&qid=1624141592&sr=8-1)
 - Jimmy Bogard - [Vertical Slice Architecture Talk](https://www.youtube.com/watch?v=5kOzZz2vj2o)
 - Jimmy Bogard - [Vertical Slice Architecture Blog](https://jimmybogard.com/vertical-slice-architecture/)
 - Vladimir Khorikov - [When to Mock](https://enterprisecraftsmanship.com/posts/when-to-mock/)
@@ -257,6 +259,7 @@ Weighted canary release to new API gateway (see: [here](https://developers.cloud
 - Martin Fowler - [Transaction Script](https://martinfowler.com/eaaCatalog/transactionScript.html)
 - Martin Fowler - [Patterns of Enterprise Application Architecture](https://www.amazon.ca/Patterns-Enterprise-Application-Architecture-Martin/dp/0321127420/ref=sr_1_1?crid=2Z4PNNZS8S5G2&dchild=1&keywords=patterns+of+enterprise+application+architecture&qid=1624062774&s=books&sprefix=patterns+of+enter%2Cstripbooks%2C153&sr=1-1)
 - Khalil Stemmler - [DDD Forum](https://github.com/stemmlerjs/ddd-forum)
+- Khalil Stemmler - [Solid Book](https://solidbook.io/)
 - Matt Ho - [Serverless Event Sourcing with Go](https://www.youtube.com/watch?v=B-reKkB8L5Q)
 - Pat Helland - [Life beyond Distributed Transactions](http://cs.brown.edu/courses/cs227/archives/2012/papers/weaker/cidr07p15.pdf)
 - Kamil Grzybek - [Modular Monolith with DDD](https://github.com/kgrzybek/modular-monolith-with-ddd)
@@ -273,5 +276,8 @@ Weighted canary release to new API gateway (see: [here](https://developers.cloud
 - Eric Evans - [Domain Driven Design](https://www.amazon.ca/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=pd_lpo_1?pd_rd_i=0321125215&psc=1)
 - Michiel Overeem - [The Dark Side of Event Sourcing](https://www.movereem.nl/files/2017SANER-eventsourcing.pdf)
 - Joris Kuipers - [Day 2 problems in CQRS and Event Sourcing](https://www.youtube.com/watch?v=73KxyTUU4nU)
+- Sebastian Gebski - [State pattern, tech debt fertilizer](https://no-kill-switch.ghost.io/state-pattern-tech-debt-fertilizer/)
+- Gruntwork.io - [How to deploy a production-grade VPC on AWS](https://gruntwork.io/guides/networking/how-to-deploy-production-grade-vpc-aws/)
+- Gruntwork.io - [How to configure a production-grade AWS account structure](https://gruntwork.io/guides/foundations/how-to-configure-production-grade-aws-account-structure/)
 - Yan Cui - [Event Sourcing with Lambda and DynamoDB](https://theburningmonk.com/2019/08/a-simple-event-sourcing-example-with-snapshots-using-lambda-and-dynamodb/)
 - Nord Fjord - [SQL Event Store](https://nordfjord.io/blog/sql-event-store-maybe-not)

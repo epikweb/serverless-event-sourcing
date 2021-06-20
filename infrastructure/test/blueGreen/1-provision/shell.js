@@ -1,5 +1,6 @@
 const {locateApiGatewayRestApi, checkIfDynamoTableNeedsKinesisIntegration, locateDynamoEventTable, locateKinesisEventBus, parseKinesisEventBusArn} = require("./core");
 const AWS = require('aws-sdk')
+const {runCommand} = require("../../harness");
 
 const dynamoDb = new AWS.DynamoDB({ region: 'us-east-2' })
 const apiGateway = new AWS.APIGateway({ region: 'us-east-2' })
@@ -8,13 +9,13 @@ const kinesis = new AWS.Kinesis({ region: 'us-east-2' })
 module.exports.provision = async gitSha => {
   console.log(`Preparing to provision version with git sha: ${gitSha}`)
 
-  /*
+
   await runCommand('cdk', [
     'deploy',
     '--require-approval', 'never'
   ], {
     GIT_SHA: gitSha
-  })*/
+  })
 
   return await Promise.all([
     dynamoDb.listTables().promise()
@@ -45,12 +46,6 @@ module.exports.provision = async gitSha => {
         kinesisEventBusArn
       ]
     ) => {
-
-      console.log([
-        { dynamoEventTableName, dynamoEventTableNeedsKinesisIntegration },
-        apiGatewayEndpoint,
-        kinesisEventBusArn
-      ])
 
       // DynamoDb kinesis integration not yet supported in cloudformation/cdk
       if (dynamoEventTableNeedsKinesisIntegration) {
