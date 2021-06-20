@@ -11,8 +11,8 @@ const client = new AWS.DynamoDB.DocumentClient(options)
 const ddlClient = new AWS.DynamoDB(options)
 
 
-const arrangeEventTable = eventTableName =>
-  ddlClient.createTable({
+const arrangeEventTable = async eventTableName => {
+  await ddlClient.createTable({
     TableName: eventTableName,
     AttributeDefinitions: [
       {AttributeName: 'aggregateId', AttributeType: 'S'},
@@ -24,9 +24,10 @@ const arrangeEventTable = eventTableName =>
     ],
     BillingMode: 'PAY_PER_REQUEST'
   }).promise()
+}
 
-const arrangeProjectionTable = projectionTableName =>
-  ddlClient.createTable({
+const arrangeProjectionTable = async projectionTableName => {
+  await ddlClient.createTable({
     TableName: projectionTableName,
     AttributeDefinitions: [
       {AttributeName: 'lookupKey', AttributeType: 'S'}
@@ -36,11 +37,11 @@ const arrangeProjectionTable = projectionTableName =>
     ],
     BillingMode: 'PAY_PER_REQUEST'
   }).promise()
+}
 
 
 module.exports = {
-  arrangeDynamoTables: ({ eventTableName, projectionTableName }) =>
-    arrangeEventTable(eventTableName)
-      .then(() => arrangeProjectionTable(projectionTableName))
-      .then(() => client)
+  arrangeEventTable,
+  arrangeProjectionTable,
+  client
 }

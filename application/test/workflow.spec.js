@@ -1,4 +1,4 @@
-const {arrangeDynamoTables} = require("./_harness");
+const {arrangeEventTable, arrangeProjectionTable, client} = require("./_harness");
 const {retrieveBalance} = require("../src/4-retrieveBalance");
 const { open } = require("../src/1-open/index")
 const { creditMoney } = require("../src/2-creditMoney/index")
@@ -34,7 +34,8 @@ describe('Workflow integration tests', async() => {
     const projectionTableName = v4()
     const walletId = v4()
 
-    const client = await arrangeDynamoTables({ eventTableName, projectionTableName })
+    await arrangeEventTable(eventTableName)
+    await arrangeProjectionTable(projectionTableName)
 
 
     await Promise.resolve(marshalApiGatewayRestRequestCmd({ walletId })).then(cmd => open(cmd, null, { client, eventTableName }))
