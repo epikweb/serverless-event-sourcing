@@ -15,9 +15,16 @@ const dynamodb = require('@aws-cdk/aws-dynamodb');
 const eventTable = new dynamodb.Table(stack, 'events', {
   partitionKey: {name: 'aggregateId', type: dynamodb.AttributeType.STRING},
   sortKey: {name: 'version', type: dynamodb.AttributeType.NUMBER},
+
   billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
   removalPolicy: cdk.RemovalPolicy.DESTROY
 })
+eventTable.addGlobalSecondaryIndex({
+  indexName: 'AggregateName',
+  partitionKey: { name: 'aggregateName', type: dynamodb.AttributeType.STRING },
+  sortKey: { name: 'aggregateId', type: dynamodb.AttributeType.STRING }
+})
+
 const projectionTable = new dynamodb.Table(stack, 'projections', {
   partitionKey: {name: 'lookupKey', type: dynamodb.AttributeType.STRING},
   billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -47,7 +54,7 @@ const { KinesisEventSource } = require('@aws-cdk/aws-lambda-event-sources');
       handler: 'src/1-open/index.open',
       code: new lambda.AssetCode('../application'),
       environment: {
-        DYNAMODB_TABLE_NAME: projectionTable.tableName
+        EVENT_TABLE_NAME: eventTable.tableName
       }
     })
 
@@ -66,7 +73,7 @@ const { KinesisEventSource } = require('@aws-cdk/aws-lambda-event-sources');
       handler: 'src/2-creditMoney/index.creditMoney',
       code: new lambda.AssetCode('../application'),
       environment: {
-        DYNAMODB_TABLE_NAME: eventTable.tableName
+        EVENT_TABLE_NAME: eventTable.tableName
       }
     })
 
@@ -85,7 +92,7 @@ const { KinesisEventSource } = require('@aws-cdk/aws-lambda-event-sources');
       handler: 'src/3-calculateBalance/index.calculateBalance',
       code: new lambda.AssetCode('../application'),
       environment: {
-        DYNAMODB_TABLE_NAME: projectionTable.tableName
+        PROJECTION_TABLE_NAME: projectionTable.tableName
       }
     });
 
@@ -104,7 +111,7 @@ const { KinesisEventSource } = require('@aws-cdk/aws-lambda-event-sources');
       handler: 'src/4-retrieveBalance/index.retrieveBalance',
       code: new lambda.AssetCode('../application'),
       environment: {
-        DYNAMODB_TABLE_NAME: projectionTable.tableName
+        PROJECTION_TABLE_NAME: projectionTable.tableName
       }
     })
 

@@ -1,4 +1,4 @@
-const {EventStore} = require('../src/_eventStore')
+const {EventStore} = require('../src/_eventStoreDynamo')
 const {arrangeEventTable, client} = require("./_harness");
 const {assert} = require('chai')
 const {v4} = require('uuid')

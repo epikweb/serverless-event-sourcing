@@ -1,9 +1,10 @@
-const {EventStore} = require("../_eventStore");
+const {EventStore} = require("../_eventStoreDynamo");
 const AWS = require('aws-sdk')
 
 
 const log = (...args) => console.log(`[open]:`, ...args)
 module.exports.open = async(cmd, context, { client = new AWS.DynamoDB.DocumentClient(), eventTableName = process.env.EVENT_TABLE_NAME }) => {
+  log('Cmd received', cmd)
   const { walletId } = JSON.parse(cmd.body)
 
   const eventStore = EventStore({

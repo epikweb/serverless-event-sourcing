@@ -6,21 +6,23 @@ const {calculateBalance} = require("../src/3-calculateBalance");
 const {assert} = require('chai')
 const {v4} = require('uuid')
 
-const marshalKinesisConsumerBatchProcessCmd = events => JSON.stringify({
+const marshalKinesisConsumerBatchProcessCmd = events => ({
   Records:
     events.map(
       ({ aggregateId, type, payload }) =>
         ({
           kinesis: {
-            data: {
-              dynamodb: {
-                NewImage: {
-                  aggregateId: { S: aggregateId },
-                  payload: { S: JSON.stringify(payload) },
-                  type: { S: type }
+            data: Buffer.from(
+              JSON.stringify({
+                dynamodb: {
+                  NewImage: {
+                    aggregateId: { S: aggregateId },
+                    payload: { S: JSON.stringify(payload) },
+                    type: { S: type }
+                  }
                 }
-              }
-            }
+              })
+            ).toString('base64')
           }
         })
     )
@@ -43,21 +45,31 @@ describe('Workflow integration tests', async() => {
     await Promise.resolve(marshalApiGatewayRestRequestCmd({ walletId, amount: 7 })).then(cmd => creditMoney(cmd, null, { client, eventTableName }))
 
 
+    await Promise.resolve(
+      marshalKinesisConsumerBatchProcessCmd([
+        { aggregateId: walletId, payload: { currency: 'CAD' }, type: 'Opened' }
+      ])
+    ).then(cmd => calculateBalance(cmd, null, { client, projectionTableName }))
 
     await Promise.resolve(
       marshalKinesisConsumerBatchProcessCmd([
-        { aggregateId: walletId, payload: { currency: 'CAD' }, type: 'Opened' },
-        { aggregateId: walletId, payload: { amount: 5 }, type: 'Credited' },
+        { aggregateId: walletId, payload: { amount: 5 }, type: 'Credited' }
+      ])
+    ).then(cmd => calculateBalance(cmd, null, { client, projectionTableName }))
+
+    await Promise.resolve(
+      marshalKinesisConsumerBatchProcessCmd([
         { aggregateId: walletId, payload: { amount: 7 }, type: 'Credited' }
       ])
     ).then(cmd => calculateBalance(cmd, null, { client, projectionTableName }))
+
 
     const output = await Promise.resolve(marshalApiGatewayRestRequestCmd({ walletId })).then(cmd => retrieveBalance(cmd, null, { client, projectionTableName }))
 
     assert.deepEqual(output,  {
       statusCode: 200,
       headers: {},
-      body: '{"currency":"CAD","balance":12}'
+      body: "{\"balance\":12,\"currency\":\"CAD\"}"
     })
   })
 })

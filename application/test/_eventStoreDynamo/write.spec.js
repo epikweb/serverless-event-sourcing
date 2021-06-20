@@ -1,5 +1,5 @@
 const {arrangeEventTable, client} = require("./_harness");
-const {EventStore} = require("../src/_eventStore");
+const {EventStore} = require("../src/_eventStoreDynamo");
 const {assert} = require('chai')
 const {v4} = require('uuid')
 describe('event store write integration tests', () => {

@@ -5,6 +5,8 @@ const {unmarshalHttpRequestBody, marshalQuery, unmarshalQuery, marshalHttpRespon
 
 const log = (...args) => console.log(`[retrieveBalance]:`, ...args)
 module.exports.retrieveBalance = async(cmd, context, { client=new AWS.DynamoDB.DocumentClient(), projectionTableName = process.env.PROJECTION_TABLE_NAME }) => {
+  log('Cmd received', cmd)
+
   const { walletId } = unmarshalHttpRequestBody(cmd)
   log(`Wallet ID:`, walletId)
 

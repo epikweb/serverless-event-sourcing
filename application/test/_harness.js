@@ -8,6 +8,7 @@ const options = {
   }
 }
 const client = new AWS.DynamoDB.DocumentClient(options)
+const streamClient = new AWS.DynamoDBStreams(options)
 const ddlClient = new AWS.DynamoDB(options)
 
 
@@ -16,13 +17,30 @@ const arrangeEventTable = async eventTableName => {
     TableName: eventTableName,
     AttributeDefinitions: [
       {AttributeName: 'aggregateId', AttributeType: 'S'},
+      {AttributeName: 'aggregateName', AttributeType: 'S'},
       {AttributeName: 'version', AttributeType: 'N'}
     ],
     KeySchema: [
       {AttributeName: 'aggregateId', KeyType: 'HASH'},
       {AttributeName: 'version', KeyType: 'RANGE'}
     ],
-    BillingMode: 'PAY_PER_REQUEST'
+    GlobalSecondaryIndexes: [
+      {
+        IndexName: 'AggregateName',
+        KeySchema: [
+          {AttributeName: 'aggregateName', KeyType: 'HASH'},
+          {AttributeName: 'aggregateId', KeyType: 'RANGE'}
+        ],
+        Projection: {
+          ProjectionType: 'ALL'
+        }
+      }
+    ],
+    BillingMode: 'PAY_PER_REQUEST',
+    StreamSpecification: {
+      StreamEnabled: true,
+      StreamViewType: 'NEW_AND_OLD_IMAGES'
+    }
   }).promise()
 }
 
@@ -43,5 +61,6 @@ const arrangeProjectionTable = async projectionTableName => {
 module.exports = {
   arrangeEventTable,
   arrangeProjectionTable,
-  client
+  client,
+  streamClient
 }

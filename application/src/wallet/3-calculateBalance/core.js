@@ -1,6 +1,16 @@
 const {assert} = require('chai')
 
 
+const Maybe = value => ({
+  exists: typeof value !== 'undefined' && value !== null,
+  value,
+  chain: cb => cb(Maybe(value)),
+  map: cb => cb(value)
+})
+Maybe.Just = value => Maybe(value)
+Maybe.Nothing = Maybe(null)
+
+
 const pipe = (...fns) => (x) => fns.reduce((v, f) => f(v), x);
 const buildReducer = (initialState, handlers) => events => events.reduce((state, event) => {
   if (handlers[event.type]) {
@@ -9,11 +19,20 @@ const buildReducer = (initialState, handlers) => events => events.reduce((state,
   return state
 }, initialState)
 
-const unmarshalDynamoNewImages = cmd => cmd.Records.map(record => record.kinesis.data.dynamodb.NewImage)
-const unmarshalEvents = dynamoNewImages => pipe(
-  () => dynamoNewImages.map(image => ({ type: image['type']['S'], payload: JSON.parse(image['payload']['S']) })),
-  events => ({ events, walletId: dynamoNewImages[0]['aggregateId']['S'] })
-)()
+const unmarshalKinesisMessages = data => data.Records.map(
+  record =>
+    pipe(
+      () => Buffer.from(record.kinesis.data, 'base64').toString(),
+      JSON.parse
+  )()
+)
+const unmarshalDynamoTableEvents = kinesisMessages => {
+  const newImages = kinesisMessages.map(msg => msg.dynamodb.NewImage)
+  return pipe(
+    () => newImages.map(image => ({ type: image.type.S, payload: JSON.parse(image.payload.S), aggregateId: image.aggregateId.S })),
+    events => ({ events, walletId: newImages[0]['aggregateId']['S'] })
+  )()
+}
 
 const marshalCurrentStateQuery = (projectionTableName, walletId) => ({
   TableName: projectionTableName,
@@ -26,7 +45,11 @@ const marshalCurrentStateQuery = (projectionTableName, walletId) => ({
 })
 
 
-const unmarshalPrevState = getResponse => getResponse.Items[0]
+const unmarshalPrevState = getResponse => pipe(
+  () => getResponse.Items[0],
+  row => row ? Maybe.Just(JSON.parse(row.state)) : Maybe.Nothing
+)()
+
 const marshalStateMutationQuery = (projectionTableName, walletId, nextState) => ({
   TableName: projectionTableName,
   Item: {
@@ -39,10 +62,10 @@ const marshalStateMutationQuery = (projectionTableName, walletId, nextState) => 
 
 
 
-const computeNextState = (prevState, events) =>
-  buildReducer(prevState ? {
-    balance: prevState.balance,
-    currency: prevState.currency
+const computeNextState = (maybePrevState, events) =>
+  buildReducer(maybePrevState.exists ? {
+    balance: maybePrevState.value.balance,
+    currency: maybePrevState.value.currency
   } : null, {
     Opened: (state, { payload }) => ({ ...state, currency: payload.currency, balance: 0 }),
     Credited: (state, { payload }) => ({ ...state, balance: state.balance + payload.amount }),
@@ -51,9 +74,8 @@ const computeNextState = (prevState, events) =>
 
 module.exports = ({
   unmarshalEvents: cmd => pipe(
-    JSON.parse,
-    unmarshalDynamoNewImages,
-    unmarshalEvents
+    unmarshalKinesisMessages,
+    unmarshalDynamoTableEvents
   )(cmd),
   marshalCurrentStateQuery,
   unmarshalPrevState,

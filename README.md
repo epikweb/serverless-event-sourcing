@@ -185,7 +185,7 @@ Most of these issues can be mitigated can be distilled to the fact that schema c
 - Allows for an in-order replay guarantee on a per-stream basis.
 - Allows for write scalability due to sharding based on a UUID key with high cardinality (`aggregateId`).
 - Has transactional guarantees necessary to prevent concurrent writers writing to the same `expectedVersion`
-- Has built-in streaming to Kinesis with the flip of a switch
+
 
 ### Primary key schema
 
@@ -208,14 +208,43 @@ Weighted canary release to new API gateway (see: [here](https://developers.cloud
 - One lambda per command
 - Writes to event store
 
-## Event Bus - Kinesis
+## ~~Subscriptions Attempt #1 - Event Bus with Kinesis~~
 
-![](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2020/09/28/kinesis1-1024x309.png)
-![](https://d2908q01vomqb2.cloudfront.net/1b6453892473a467d07372d45eb05abc2031647a/2020/09/28/kinesis2-1024x370.png)
+-  ~~DynamoDB has native replication to Kinesis~~
+-  ~~Kinesis has ordering guarantees per dynamodb partition~~
+-  ~~This allowed in-order replay of aggregates even with competing consumers~~
 
-- DynamoDB has native replication to Kinesis
-- Kinesis has ordering guarantees per dynamodb partition
-- This allowed in-order replay of aggregates even with competing consumers
+Conclusion:
+- Too many failure points to be considered for production (retry/max retention time, dead letter queue).
+- Complexity
+- Direct Kinesis integration to Dynamo does not have ordering guarantees per partition key
+
+## ~~Subscriptions Attempt #2 - Event Bus with DynamoDb Streams~~
+Conclusion: 
+- Too many failure points to be considered for production (retry/24 hour retention time, dead letter queue).
+- Complexity
+
+## ~~Subscriptions Attempt #3 - Dynamo Global Secondary Index on Aggregate Name sorted by Aggregate ID~~
+
+~~Example: Live update of all wallets who were credited at least once in the last 30 days and also clicked a green button
+~~Divide and conquer across aggregate names:~~
+~~1. Live update of all wallets who were credited at least once in the last 30 days~~
+~~2. Clicked a green button~~
+~~3. Left join 1 and 2~~~
+
+Conclusion:
+- DynamoDB does not having the global ordering guarantees we need, global projections would become very complex since ordering is only guaranteed on a per-aggregate level
+
+
+## Subscriptions Attempt #4 - Postgres with custom write strategy
+
+- Poll events table
+- Compensate for gaps asynchronously
+- Benchmark performance
+- Use bull + outbox pattern to message external consumers at leas tonce
+- Copy https://github.com/WegenenVerkeer/akka-persistence-postgresql
+
+There can be gaps in the postgresql sequence due to atomicity, we need to account for this using something special for the persistent subscription.
 
 
 ## Projectors - Lambda

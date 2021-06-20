@@ -1,4 +1,4 @@
-const {EventStore} = require("../_eventStore");
+const {EventStore} = require("../_eventStoreDynamo");
 const AWS = require('aws-sdk')
 
 const buildReducer = (initialState, handlers) => events => events.reduce((state, event) => {
@@ -11,6 +11,7 @@ const buildReducer = (initialState, handlers) => events => events.reduce((state,
 
 const log = (...args) => console.log(`[open]:`, ...args)
 module.exports.creditMoney = async(cmd, context, { client = new AWS.DynamoDB.DocumentClient(), eventTableName = process.env.EVENT_TABLE_NAME }) => {
+  log('Cmd received', cmd)
 
   const eventStore = EventStore({
     tableName: eventTableName,

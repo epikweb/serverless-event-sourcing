@@ -3,6 +3,8 @@ const {unmarshalEvents, unmarshalPrevState, computeNextState, marshalStateMutati
 
 const log = (...args) => console.log(`[calculateBalance]:`, ...args)
 module.exports.calculateBalance = async(cmd, context, { client=new AWS.DynamoDB.DocumentClient(), projectionTableName = process.env.PROJECTION_TABLE_NAME }) => {
+  console.dir(cmd, { depth: null })
+
   const { walletId, events } = await unmarshalEvents(cmd)
   log(`Received events for wallet id`, walletId, events)
 
@@ -12,10 +14,10 @@ module.exports.calculateBalance = async(cmd, context, { client=new AWS.DynamoDB.
   const queryResponse = await client.query(marshalledStateQuery).promise()
   log(`Query response:`, queryResponse)
 
-  const prevState = unmarshalPrevState(queryResponse)
-  log(`Prev state:`, prevState)
+  const maybePrevState = unmarshalPrevState(queryResponse)
+  log(`Prev state:`, maybePrevState)
 
-  const nextState = computeNextState(prevState, events)
+  const nextState = computeNextState(maybePrevState, events)
   log(`Mutating state to:`, nextState)
 
   const stateMutationQuery = marshalStateMutationQuery(projectionTableName, walletId, nextState)
