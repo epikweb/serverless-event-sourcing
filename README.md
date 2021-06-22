@@ -1,4 +1,4 @@
-# Immutable Stack
+# Serverless Event Sourcing
 This documents my adventure into the world of immutability to solve common distributed system problems.
 
 Work in progress!
